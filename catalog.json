@@ -1,155 +1,173 @@
 [
- {
-  "id": "xiyouji",
-  "title": "西游记",
-  "author": "吴承恩",
-  "intro": "中国古代第一部浪漫主义章回体长篇神魔小说。唐僧师徒西天取经，历经九九八十一难。",
-  "section": "classics",
-  "chapters": 100,
-  "chars": 710010
- },
- {
-  "id": "sanguo",
-  "title": "三国演义",
-  "author": "罗贯中",
-  "intro": "中国章回小说的开山之作。东汉末年群雄割据，魏蜀吴三国争霸，一百二十回写尽谋略与人心。",
-  "section": "classics",
-  "chapters": 120,
-  "chars": 598485
- },
- {
-  "id": "shuihu",
-  "title": "水浒传",
-  "author": "施耐庵",
-  "intro": "一百单八将聚义梁山泊，写尽官逼民反的江湖与人情，是一部英雄传奇。",
-  "section": "classics",
-  "chapters": 120,
-  "chars": 910459
- },
- {
-  "id": "honglou",
-  "title": "红楼梦",
-  "author": "曹雪芹",
-  "intro": "以贾宝玉与林黛玉、薛宝钗的爱情悲剧为主线，写尽四大家族的兴衰与人情世态。",
-  "section": "classics",
-  "chapters": 120,
-  "chars": 845200
- },
- {
-  "id": "zibei",
-  "title": "自卑与超越",
-  "author": "阿德勒",
-  "intro": "阿德勒个体心理学的代表作。从自卑情结到追求优越，讲清人一生行为的动力与生活的意义。",
-  "section": "adler",
-  "chapters": 13,
-  "chars": 123162
- },
- {
-  "id": "lijierenxing",
-  "title": "理解人性",
-  "author": "阿德勒",
-  "intro": "阿德勒写给普通人的个体心理学入门。灵魂、社会性、儿童、自卑感与认同、性格的科学。",
-  "section": "adler",
-  "chapters": 17,
-  "chars": 121747
- },
- {
-  "id": "ertong-jiaoyu",
-  "title": "儿童教育心理学",
-  "author": "阿德勒",
-  "intro": "阿德勒谈儿童教育：人格如何在童年形成，父母与教师怎么做才是真正的帮助。",
-  "section": "adler",
-  "chapters": 15,
-  "chars": 106277
- },
- {
-  "id": "ziwo-chaoyue",
-  "title": "自我超越",
-  "author": "阿德勒",
-  "intro": "五讲谈自我超越：生命的真谛、回忆、行动方式与孩子的超越教育。",
-  "section": "adler",
-  "chapters": 5,
-  "chars": 187295
- },
- {
-  "id": "ren-zuodedao",
-  "title": "人，做得到任何事",
-  "author": "阿德勒",
-  "intro": "十三讲讲透自卑情结、优越情结、人生风格、早期记忆与梦：人能做到任何事，关键在态度与行动。",
-  "section": "adler",
-  "chapters": 14,
-  "chars": 91568
- },
- {
-  "id": "meng-de-jiexi",
-  "title": "梦的解析",
-  "author": "弗洛伊德",
-  "intro": "弗洛伊德的代表作，系统阐述释梦理论，提出梦是愿望满足的观点，是精神分析学的奠基之作。",
-  "section": "freud-jung",
-  "chapters": 9,
-  "chars": 416729
- },
- {
-  "id": "jingshen-fenxi-yinlun",
-  "title": "精神分析引论",
-  "author": "弗洛伊德",
-  "intro": "弗洛伊德在维也纳大学的系列讲演结集，用通俗的语言介绍精神分析的基本概念，是进入精神分析的入门读本。",
-  "section": "freud-jung",
-  "chapters": 29,
-  "chars": 254007
- },
- {
-  "id": "ziwo-yu-benwo",
-  "title": "自我与本我",
-  "author": "弗洛伊德",
-  "intro": "弗洛伊德后期代表作，提出本我、自我、超我的人格结构理论，是精神分析理论成熟期的核心著作。",
-  "section": "freud-jung",
-  "chapters": 5,
-  "chars": 38217
- },
- {
-  "id": "huangdi-neijing-suwen",
-  "title": "黄帝内经·素问",
-  "author": "佚名",
-  "intro": "中医现存最早的理论经典，论述阴阳五行、脏腑经络与养生治病之道。",
-  "section": "tcm",
-  "chapters": 81,
-  "chars": 125586
- },
- {
-  "id": "huangdi-neijing-lingshu",
-  "title": "黄帝内经·灵枢",
-  "author": "佚名",
-  "intro": "《黄帝内经》的另一半，以经络腧穴与针刺之法为核心。",
-  "section": "tcm",
-  "chapters": 81,
-  "chars": 84173
- },
- {
-  "id": "shanghan-lun",
-  "title": "伤寒论",
-  "author": "张仲景",
-  "intro": "张仲景论外感病辨证论治的经典，以六经辨证立纲，方药并举。",
-  "section": "tcm",
-  "chapters": 22,
-  "chars": 47637
- },
- {
-  "id": "jinkui-yaolue",
-  "title": "金匮要略",
-  "author": "张仲景",
-  "intro": "张仲景论内伤杂病的经典，脏腑辨证与方药并重。",
-  "section": "tcm",
-  "chapters": 25,
-  "chars": 31002
- },
- {
-  "id": "shennong-bencao-jing",
-  "title": "神农本草经",
-  "author": "佚名",
-  "intro": "现存最早的药物学专著，按上中下三品收载药物。",
-  "section": "tcm",
-  "chapters": 19,
-  "chars": 18370
- }
+  {
+    "id": "xiyouji",
+    "title": "西游记",
+    "author": "吴承恩",
+    "intro": "中国古代第一部浪漫主义章回体长篇神魔小说。唐僧师徒西天取经，历经九九八十一难。",
+    "section": "classics",
+    "chapters": 100,
+    "chars": 710010
+  },
+  {
+    "id": "sanguo",
+    "title": "三国演义",
+    "author": "罗贯中",
+    "intro": "中国章回小说的开山之作。东汉末年群雄割据，魏蜀吴三国争霸，一百二十回写尽谋略与人心。",
+    "section": "classics",
+    "chapters": 120,
+    "chars": 598485
+  },
+  {
+    "id": "shuihu",
+    "title": "水浒传",
+    "author": "施耐庵",
+    "intro": "一百单八将聚义梁山泊，写尽官逼民反的江湖与人情，是一部英雄传奇。",
+    "section": "classics",
+    "chapters": 120,
+    "chars": 910459
+  },
+  {
+    "id": "honglou",
+    "title": "红楼梦",
+    "author": "曹雪芹",
+    "intro": "以贾宝玉与林黛玉、薛宝钗的爱情悲剧为主线，写尽四大家族的兴衰与人情世态。",
+    "section": "classics",
+    "chapters": 120,
+    "chars": 845200
+  },
+  {
+    "id": "zibei",
+    "title": "自卑与超越",
+    "author": "阿德勒",
+    "intro": "阿德勒个体心理学的代表作。从自卑情结到追求优越，讲清人一生行为的动力与生活的意义。",
+    "section": "adler",
+    "chapters": 13,
+    "chars": 123162
+  },
+  {
+    "id": "lijierenxing",
+    "title": "理解人性",
+    "author": "阿德勒",
+    "intro": "阿德勒写给普通人的个体心理学入门。灵魂、社会性、儿童、自卑感与认同、性格的科学。",
+    "section": "adler",
+    "chapters": 17,
+    "chars": 121747
+  },
+  {
+    "id": "ertong-jiaoyu",
+    "title": "儿童教育心理学",
+    "author": "阿德勒",
+    "intro": "阿德勒谈儿童教育：人格如何在童年形成，父母与教师怎么做才是真正的帮助。",
+    "section": "adler",
+    "chapters": 15,
+    "chars": 106277
+  },
+  {
+    "id": "ziwo-chaoyue",
+    "title": "自我超越",
+    "author": "阿德勒",
+    "intro": "五讲谈自我超越：生命的真谛、回忆、行动方式与孩子的超越教育。",
+    "section": "adler",
+    "chapters": 5,
+    "chars": 187295
+  },
+  {
+    "id": "ren-zuodedao",
+    "title": "人，做得到任何事",
+    "author": "阿德勒",
+    "intro": "十三讲讲透自卑情结、优越情结、人生风格、早期记忆与梦：人能做到任何事，关键在态度与行动。",
+    "section": "adler",
+    "chapters": 14,
+    "chars": 91568
+  },
+  {
+    "id": "meng-de-jiexi",
+    "title": "梦的解析",
+    "author": "弗洛伊德",
+    "intro": "弗洛伊德的代表作，系统阐述释梦理论，提出梦是愿望满足的观点，是精神分析学的奠基之作。",
+    "section": "freud-jung",
+    "chapters": 9,
+    "chars": 416729
+  },
+  {
+    "id": "jingshen-fenxi-yinlun",
+    "title": "精神分析引论",
+    "author": "弗洛伊德",
+    "intro": "弗洛伊德在维也纳大学的系列讲演结集，用通俗的语言介绍精神分析的基本概念，是进入精神分析的入门读本。",
+    "section": "freud-jung",
+    "chapters": 29,
+    "chars": 254007
+  },
+  {
+    "id": "ziwo-yu-benwo",
+    "title": "自我与本我",
+    "author": "弗洛伊德",
+    "intro": "弗洛伊德后期代表作，提出本我、自我、超我的人格结构理论，是精神分析理论成熟期的核心著作。",
+    "section": "freud-jung",
+    "chapters": 5,
+    "chars": 38217
+  },
+  {
+    "id": "huangdi-neijing-suwen",
+    "title": "黄帝内经·素问",
+    "author": "佚名",
+    "intro": "中医现存最早的理论经典，论述阴阳五行、脏腑经络与养生治病之道。",
+    "section": "tcm",
+    "chapters": 81,
+    "chars": 125586
+  },
+  {
+    "id": "huangdi-neijing-lingshu",
+    "title": "黄帝内经·灵枢",
+    "author": "佚名",
+    "intro": "《黄帝内经》的另一半，以经络腧穴与针刺之法为核心。",
+    "section": "tcm",
+    "chapters": 81,
+    "chars": 84173
+  },
+  {
+    "id": "shanghan-lun",
+    "title": "伤寒论",
+    "author": "张仲景",
+    "intro": "张仲景论外感病辨证论治的经典，以六经辨证立纲，方药并举。",
+    "section": "tcm",
+    "chapters": 22,
+    "chars": 47637
+  },
+  {
+    "id": "jinkui-yaolue",
+    "title": "金匮要略",
+    "author": "张仲景",
+    "intro": "张仲景论内伤杂病的经典，脏腑辨证与方药并重。",
+    "section": "tcm",
+    "chapters": 25,
+    "chars": 31002
+  },
+  {
+    "id": "shennong-bencao-jing",
+    "title": "神农本草经",
+    "author": "佚名",
+    "intro": "现存最早的药物学专著，按上中下三品收载药物。",
+    "section": "tcm",
+    "chapters": 19,
+    "chars": 18370
+  },
+  {
+    "id": "zhongyi-jichu-lilun",
+    "title": "中医基础理论笔记",
+    "author": "书房整理",
+    "intro": "中医基础理论课程的学习笔记：从阴阳五行、藏象气血到病因病机与防治原则，讲清核心概念与记忆点。",
+    "section": "tcm-study",
+    "chapters": 10,
+    "chars": 8724
+  },
+  {
+    "id": "yiguwen-yaodian",
+    "title": "医古文要点",
+    "author": "书房整理",
+    "intro": "医古文课程的要点笔记：训诂入门、常用虚实词、句式、通假古今异义、文化常识与经典选读要点。",
+    "section": "tcm-study",
+    "chapters": 8,
+    "chars": 8214
+  }
 ]

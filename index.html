@@ -9,16 +9,22 @@
 <body>
 <header class="site-header">
   <h1>书房<span class="seal">读</span></h1>
-  <p class="subtitle">四大名著 · 阿德勒 · 弗洛伊德与荣格 · 中医经典</p>
+  <p class="subtitle">四大名著 · 阿德勒 · 弗洛伊德与荣格 · 中医经典 · 中医学习</p>
+  <p class="site-stats" id="siteStats"></p>
   <div class="header-rule" aria-hidden="true"></div>
+  <div class="search-wrap">
+    <input id="searchInput" type="search" placeholder="搜书名 / 作者" aria-label="搜索书名或作者" autocomplete="off">
+  </div>
 </header>
+
+<div class="continue-strip" id="continueStrip" hidden></div>
 
 <main id="shelf">
   <p class="loading">正在打开书架…</p>
 </main>
 
 <footer class="site-footer">
-  <p>四大名著与中医经典为公版原文；阿德勒、弗洛伊德、荣格著作为流传译本，部分为扫描识别文本，或有少量识别错误。仅供个人阅读。</p>
+  <p>四大名著与中医经典为公版原文；阿德勒、弗洛伊德著作为流传译本，部分为扫描识别文本，或有少量识别错误；中医学习栏目为本站整理的学习笔记。仅供个人阅读。</p>
 </footer>
 
 <script>
@@ -26,10 +32,14 @@ const SECTION_NAMES = {
   classics: "四大名著",
   adler: "阿德勒心理学",
   "freud-jung": "弗洛伊德与荣格",
-  tcm: "中医经典"
+  tcm: "中医经典",
+  "tcm-study": "中医学习"
 };
-const SECTION_ORDER = ["classics", "adler", "freud-jung", "tcm"];
-const SEAL = { classics: "藏", adler: "心", "freud-jung": "梦", tcm: "医" };
+const SECTION_ORDER = ["classics", "adler", "freud-jung", "tcm", "tcm-study"];
+const SEAL = { classics: "藏", adler: "心", "freud-jung": "梦", tcm: "医", "tcm-study": "学" };
+
+let allBooks = [];
+let hasContinue = false;
 
 function fmtChars(n) {
   if (n >= 10000) return (n / 10000).toFixed(1).replace(/\.0$/, "") + " 万字";
@@ -43,17 +53,20 @@ function progressOf(id) {
   } catch (e) { return null; }
 }
 
-async function load() {
-  const res = await fetch("catalog.json");
-  const books = await res.json();
+function renderShelf(filter) {
+  const q = (filter || "").trim();
   const shelf = document.getElementById("shelf");
   shelf.innerHTML = "";
+  let shown = 0;
   for (const section of SECTION_ORDER) {
-    const list = books.filter(b => b.section === section);
+    const list = allBooks.filter(b => b.section === section &&
+      (!q || b.title.includes(q) || b.author.includes(q)));
     if (!list.length) continue;
+    shown += list.length;
     const h = document.createElement("h2");
     h.className = "section-title";
-    h.textContent = SECTION_NAMES[section];
+    h.innerHTML = "<span>" + SECTION_NAMES[section] + "</span>" +
+      '<span class="section-count">' + list.length + " 本</span>";
     shelf.appendChild(h);
     const grid = document.createElement("div");
     grid.className = "book-grid";
@@ -61,10 +74,11 @@ async function load() {
       const p = progressOf(b.id);
       const card = document.createElement("article");
       card.className = "book-card sec-" + b.section;
+      const longTitle = b.title.length > 6 ? " cover-title-long" : "";
       card.innerHTML =
         '<div class="book-cover">' +
           '<span class="cover-seal">' + (SEAL[b.section] || "藏") + '</span>' +
-          '<span class="cover-title">' + b.title + '</span>' +
+          '<span class="cover-title' + longTitle + '">' + b.title + '</span>' +
           '<span class="cover-author">' + b.author + '</span>' +
         '</div>' +
         '<div class="book-card-body">' +
@@ -80,7 +94,38 @@ async function load() {
     }
     shelf.appendChild(grid);
   }
+  if (!shown) {
+    shelf.innerHTML = '<p class="no-result">没找到“' + q + '”，换个词试试。</p>';
+  }
 }
+
+function renderContinue() {
+  const strip = document.getElementById("continueStrip");
+  const items = allBooks.map(b => ({ b, p: progressOf(b.id) })).filter(x => x.p);
+  hasContinue = items.length > 0;
+  if (!hasContinue) { strip.hidden = true; return; }
+  strip.hidden = false;
+  strip.innerHTML = '<span class="continue-label">继续阅读</span>' +
+    items.slice(0, 4).map(x =>
+      '<a class="continue-chip" href="reader.html?book=' + x.b.id + '&ch=' + x.p.ch + '">《' + x.b.title + '》第 ' + x.p.ch + ' 章</a>'
+    ).join("");
+}
+
+async function load() {
+  const res = await fetch("catalog.json");
+  allBooks = await res.json();
+  const total = allBooks.reduce((s, b) => s + (b.chars || 0), 0);
+  document.getElementById("siteStats").textContent =
+    "共 " + allBooks.length + " 本 · 约 " + (total / 10000).toFixed(0) + " 万字";
+  renderContinue();
+  renderShelf("");
+}
+
+document.getElementById("searchInput").addEventListener("input", e => {
+  const q = e.target.value.trim();
+  renderShelf(e.target.value);
+  document.getElementById("continueStrip").hidden = !!q || !hasContinue;
+});
 
 load().catch(() => {
   document.getElementById("shelf").innerHTML =

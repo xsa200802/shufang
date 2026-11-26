@@ -77,7 +77,6 @@ function renderChapter() {
   document.title = ch.title + " · " + book.title;
   $("bookTitle").textContent = book.title;
   $("chapterTitle").textContent = ch.title;
-  $("posLabel").textContent = "第 " + cur + " / " + book.chapters.length + " 章";
   const paras = ch.text.split(/\n\n+/).filter(p => p.trim());
   $("chapterBody").innerHTML = paras.map(p =>
     "<p>" + p.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>").join("");
@@ -97,6 +96,9 @@ function updateProgressBar() {
   const max = h.scrollHeight - h.clientHeight;
   const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
   $("progressBar").style.width = pct + "%";
+  if (book) {
+    $("posLabel").textContent = "第 " + cur + " / " + book.chapters.length + " 章 · " + Math.round(pct) + "%";
+  }
 }
 
 function buildToc() {
