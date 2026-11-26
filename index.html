@@ -8,8 +8,9 @@
 </head>
 <body>
 <header class="site-header">
-  <h1>书房</h1>
-  <p class="subtitle">四大名著 · 阿德勒心理学</p>
+  <h1>书房<span class="seal">读</span></h1>
+  <p class="subtitle">四大名著 · 阿德勒 · 弗洛伊德与荣格 · 中医经典</p>
+  <div class="header-rule" aria-hidden="true"></div>
 </header>
 
 <main id="shelf">
@@ -17,11 +18,18 @@
 </main>
 
 <footer class="site-footer">
-  <p>四大名著为公版原文；阿德勒著作译者：李青霞等。仅供个人阅读。</p>
+  <p>四大名著与中医经典为公版原文；阿德勒、弗洛伊德、荣格著作为流传译本，部分为扫描识别文本，或有少量识别错误。仅供个人阅读。</p>
 </footer>
 
 <script>
-const SECTION_NAMES = { classics: "四大名著", adler: "阿德勒心理学" };
+const SECTION_NAMES = {
+  classics: "四大名著",
+  adler: "阿德勒心理学",
+  "freud-jung": "弗洛伊德与荣格",
+  tcm: "中医经典"
+};
+const SECTION_ORDER = ["classics", "adler", "freud-jung", "tcm"];
+const SEAL = { classics: "藏", adler: "心", "freud-jung": "梦", tcm: "医" };
 
 function fmtChars(n) {
   if (n >= 10000) return (n / 10000).toFixed(1).replace(/\.0$/, "") + " 万字";
@@ -40,7 +48,7 @@ async function load() {
   const books = await res.json();
   const shelf = document.getElementById("shelf");
   shelf.innerHTML = "";
-  for (const section of ["classics", "adler"]) {
+  for (const section of SECTION_ORDER) {
     const list = books.filter(b => b.section === section);
     if (!list.length) continue;
     const h = document.createElement("h2");
@@ -52,15 +60,22 @@ async function load() {
     for (const b of list) {
       const p = progressOf(b.id);
       const card = document.createElement("article");
-      card.className = "book-card";
+      card.className = "book-card sec-" + b.section;
       card.innerHTML =
-        '<h3 class="book-title">' + b.title + '</h3>' +
-        '<p class="book-author">' + b.author + '</p>' +
-        '<p class="book-intro">' + b.intro + '</p>' +
-        '<p class="book-meta">' + b.chapters + ' 章 · ' + fmtChars(b.chars) + '</p>' +
-        (p ? '<p class="book-continue">上次读到第 ' + p.ch + ' 章</p>' : '') +
-        '<a class="book-btn" href="reader.html?book=' + b.id + (p ? '&ch=' + p.ch : '') + '">' +
-        (p ? "继续阅读" : "开始阅读") + '</a>';
+        '<div class="book-cover">' +
+          '<span class="cover-seal">' + (SEAL[b.section] || "藏") + '</span>' +
+          '<span class="cover-title">' + b.title + '</span>' +
+          '<span class="cover-author">' + b.author + '</span>' +
+        '</div>' +
+        '<div class="book-card-body">' +
+          '<h3 class="book-title">' + b.title + '</h3>' +
+          '<p class="book-author">' + b.author + '</p>' +
+          '<p class="book-intro">' + b.intro + '</p>' +
+          '<p class="book-meta">' + b.chapters + ' 章 · ' + fmtChars(b.chars) + '</p>' +
+          (p ? '<p class="book-continue">上次读到第 ' + p.ch + ' 章</p>' : '') +
+          '<a class="book-btn" href="reader.html?book=' + b.id + (p ? '&ch=' + p.ch : '') + '">' +
+          (p ? "继续阅读" : "开始阅读") + '</a>' +
+        '</div>';
       grid.appendChild(card);
     }
     shelf.appendChild(grid);
