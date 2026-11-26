@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>阅读 · 书房</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<header class="reader-header">
+  <a class="back-link" href="index.html">‹ 书架</a>
+  <span class="reader-book" id="bookTitle">…</span>
+  <button class="icon-btn" id="tocBtn" type="button">目录</button>
+</header>
+
+<main class="reader-main">
+  <h1 class="chapter-title" id="chapterTitle">正在加载…</h1>
+  <div class="chapter-body" id="chapterBody"></div>
+  <nav class="chapter-nav">
+    <button id="prevBtn" type="button">‹ 上一章</button>
+    <button id="nextBtn" type="button">下一章 ›</button>
+  </nav>
+</main>
+
+<div class="toolbar">
+  <button id="fontMinus" type="button" aria-label="减小字号">A−</button>
+  <button id="fontPlus" type="button" aria-label="增大字号">A＋</button>
+  <button id="nightBtn" type="button">夜间</button>
+  <span class="toolbar-pos" id="posLabel"></span>
+</div>
+
+<div class="drawer" id="tocDrawer" hidden>
+  <div class="drawer-panel">
+    <div class="drawer-head">
+      <span id="tocBookTitle">目录</span>
+      <button class="icon-btn" id="tocClose" type="button">✕</button>
+    </div>
+    <ol class="toc-list" id="tocList"></ol>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const bookId = params.get("book") || "xiyouji";
+let startCh = parseInt(params.get("ch") || "1", 10) || 1;
+
+let book = null;
+let cur = startCh;
+
+const $ = id => document.getElementById(id);
+const body = document.body;
+
+function loadSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem("reader-settings") || "{}");
+    if (s.font) body.style.setProperty("--reader-size", s.font + "px");
+    if (s.night) body.classList.add("night");
+  } catch (e) {}
+}
+function saveSettings() {
+  const font = parseInt(getComputedStyle(body).getPropertyValue("--reader-size")) || 19;
+  localStorage.setItem("reader-settings", JSON.stringify({
+    font, night: body.classList.contains("night")
+  }));
+}
+function saveProgress() {
+  localStorage.setItem("read-progress-" + bookId, JSON.stringify({
+    ch: cur, scroll: window.scrollY, at: Date.now()
+  }));
+}
+
+function renderChapter() {
+  const ch = book.chapters[cur - 1];
+  if (!ch) return;
+  document.title = ch.title + " · " + book.title;
+  $("bookTitle").textContent = book.title;
+  $("chapterTitle").textContent = ch.title;
+  $("posLabel").textContent = "第 " + cur + " / " + book.chapters.length + " 章";
+  const paras = ch.text.split(/\n\n+/).filter(p => p.trim());
+  $("chapterBody").innerHTML = paras.map(p =>
+    "<p>" + p.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>").join("");
+  $("prevBtn").disabled = cur <= 1;
+  $("nextBtn").disabled = cur >= book.chapters.length;
+  document.querySelectorAll(".toc-list li").forEach((li, i) => {
+    li.classList.toggle("current", i + 1 === cur);
+  });
+  window.scrollTo(0, 0);
+  updateProgressBar();
+  saveProgress();
+  history.replaceState(null, "", "reader.html?book=" + bookId + "&ch=" + cur);
+}
+
+function updateProgressBar() {
+  const h = document.documentElement;
+  const max = h.scrollHeight - h.clientHeight;
+  const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+  $("progressBar").style.width = pct + "%";
+}
+
+function buildToc() {
+  $("tocBookTitle").textContent = book.title + " · 目录";
+  const ol = $("tocList");
+  ol.innerHTML = "";
+  book.chapters.forEach((ch, i) => {
+    const li = document.createElement("li");
+    li.textContent = ch.title;
+    li.addEventListener("click", () => {
+      cur = i + 1;
+      closeToc();
+      renderChapter();
+    });
+    ol.appendChild(li);
+  });
+}
+
+function openToc() { $("tocDrawer").hidden = false; }
+function closeToc() { $("tocDrawer").hidden = true; }
+
+async function init() {
+  loadSettings();
+  const res = await fetch("books/" + bookId + ".json");
+  book = await res.json();
+  if (cur < 1) cur = 1;
+  if (cur > book.chapters.length) cur = book.chapters.length;
+  // restore scroll position if returning to the same chapter
+  let savedScroll = 0;
+  try {
+    const p = JSON.parse(localStorage.getItem("read-progress-" + bookId) || "null");
+    if (p && p.ch === cur && p.scroll) savedScroll = p.scroll;
+  } catch (e) {}
+  buildToc();
+  renderChapter();
+  if (savedScroll) window.scrollTo(0, savedScroll);
+  updateProgressBar();
+}
+
+$("prevBtn").addEventListener("click", () => { if (cur > 1) { cur--; renderChapter(); } });
+$("nextBtn").addEventListener("click", () => { if (cur < book.chapters.length) { cur++; renderChapter(); } });
+$("tocBtn").addEventListener("click", openToc);
+$("tocClose").addEventListener("click", closeToc);
+$("tocDrawer").addEventListener("click", e => { if (e.target === $("tocDrawer")) closeToc(); });
+$("fontMinus").addEventListener("click", () => {
+  const cur_size = parseInt(getComputedStyle(body).getPropertyValue("--reader-size")) || 19;
+  body.style.setProperty("--reader-size", Math.max(15, cur_size - 2) + "px");
+  saveSettings();
+});
+$("fontPlus").addEventListener("click", () => {
+  const cur_size = parseInt(getComputedStyle(body).getPropertyValue("--reader-size")) || 19;
+  body.style.setProperty("--reader-size", Math.min(26, cur_size + 2) + "px");
+  saveSettings();
+});
+$("nightBtn").addEventListener("click", () => {
+  body.classList.toggle("night");
+  saveSettings();
+});
+window.addEventListener("scroll", () => { updateProgressBar(); saveProgress(); }, { passive: true });
+window.addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft" && cur > 1) { cur--; renderChapter(); }
+  if (e.key === "ArrowRight" && book && cur < book.chapters.length) { cur++; renderChapter(); }
+  if (e.key === "Escape") closeToc();
+});
+
+init().catch(() => {
+  $("chapterTitle").textContent = "打不开这本书";
+  $("chapterBody").innerHTML = "<p>请检查网络后刷新，或返回书架重新选择。</p>";
+});
+</script>
+</body>
+</html>

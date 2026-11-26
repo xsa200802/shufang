@@ -1,0 +1,286 @@
+/* 书房 — 手机优先的阅读站样式 */
+:root {
+  --bg: #f7f1e3;
+  --bg-2: #f2e9d8;
+  --ink: #2b2b2b;
+  --muted: #6e675c;
+  --accent: #9a2b2b;
+  --accent-soft: rgba(154, 43, 43, 0.08);
+  --card: #fffdf6;
+  --border: rgba(154, 43, 43, 0.18);
+  --reader-size: 19px;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-text-size-adjust: 100%;
+}
+
+body.night {
+  --bg: #1c1a17;
+  --bg-2: #171512;
+  --ink: #d8d2c4;
+  --muted: #9a917f;
+  --accent: #d98a7a;
+  --accent-soft: rgba(217, 138, 122, 0.12);
+  --card: #26221d;
+  --border: rgba(217, 138, 122, 0.25);
+}
+
+/* ---------- 书架 ---------- */
+.site-header {
+  text-align: center;
+  padding: 36px 16px 8px;
+}
+.site-header h1 {
+  margin: 0;
+  font-size: 34px;
+  letter-spacing: 6px;
+}
+.subtitle {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  letter-spacing: 2px;
+}
+
+#shelf { max-width: 960px; margin: 0 auto; padding: 8px 16px 32px; }
+.loading { text-align: center; color: var(--muted); padding: 40px 0; }
+
+.section-title {
+  font-size: 20px;
+  letter-spacing: 3px;
+  margin: 28px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.book-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+.book-title { margin: 0; font-size: 21px; letter-spacing: 2px; }
+.book-author { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+.book-intro {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.7;
+  flex: 1;
+}
+.book-meta { margin: 12px 0 0; color: var(--muted); font-size: 13px; }
+.book-continue { margin: 6px 0 0; color: var(--accent); font-size: 13px; }
+.book-btn {
+  display: block;
+  text-align: center;
+  margin-top: 14px;
+  padding: 11px 0;
+  background: var(--accent);
+  color: #f7f1e3;
+  text-decoration: none;
+  border-radius: 999px;
+  font-size: 15px;
+  letter-spacing: 2px;
+}
+body.night .book-btn { color: #1c1a17; }
+
+.site-footer {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ---------- 阅读器 ---------- */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  width: 0;
+  background: var(--accent);
+  z-index: 30;
+}
+
+.reader-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.back-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 15px;
+  white-space: nowrap;
+}
+.reader-book {
+  flex: 1;
+  text-align: center;
+  font-size: 16px;
+  letter-spacing: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.icon-btn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.reader-main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 18px 120px;
+}
+.chapter-title {
+  font-size: 24px;
+  letter-spacing: 2px;
+  line-height: 1.5;
+  text-align: center;
+  margin: 8px 0 24px;
+}
+.chapter-body p {
+  font-size: var(--reader-size);
+  line-height: 1.9;
+  letter-spacing: 0.5px;
+  text-align: justify;
+  text-justify: inter-ideograph;
+  margin: 0 0 1em;
+}
+
+.chapter-nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 40px;
+}
+.chapter-nav button {
+  flex: 1;
+  padding: 13px 0;
+  font-size: 16px;
+  font-family: inherit;
+  letter-spacing: 2px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.chapter-nav button:disabled { opacity: 0.35; cursor: default; }
+
+.toolbar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+.toolbar button {
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font-size: 15px;
+  font-family: inherit;
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.toolbar button:active { background: var(--accent-soft); }
+.toolbar-pos {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 0 6px;
+  white-space: nowrap;
+}
+
+/* ---------- 目录抽屉 ---------- */
+.drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.4);
+}
+.drawer-panel {
+  position: absolute;
+  top: 0; right: 0;
+  width: min(86vw, 360px);
+  height: 100%;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -2px 0 16px rgba(0, 0, 0, 0.2);
+}
+.drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+.toc-list {
+  margin: 0;
+  padding: 8px 0 32px;
+  overflow-y: auto;
+  list-style: none;
+  counter-reset: toc;
+}
+.toc-list li {
+  padding: 12px 18px;
+  font-size: 15px;
+  line-height: 1.5;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+.toc-list li:active { background: var(--accent-soft); }
+.toc-list li.current { color: var(--accent); font-weight: 700; }
+
+@media (max-width: 600px) {
+  .site-header h1 { font-size: 28px; }
+  .chapter-title { font-size: 21px; }
+  .reader-main { padding: 20px 14px 120px; }
+  .chapter-body p { line-height: 1.85; }
+}

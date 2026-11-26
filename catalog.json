@@ -1,0 +1,83 @@
+[
+ {
+  "id": "xiyouji",
+  "title": "西游记",
+  "author": "吴承恩",
+  "intro": "中国古代第一部浪漫主义章回体长篇神魔小说。唐僧师徒西天取经，历经九九八十一难。",
+  "section": "classics",
+  "chapters": 100,
+  "chars": 710010
+ },
+ {
+  "id": "sanguo",
+  "title": "三国演义",
+  "author": "罗贯中",
+  "intro": "中国章回小说的开山之作。东汉末年群雄割据，魏蜀吴三国争霸，一百二十回写尽谋略与人心。",
+  "section": "classics",
+  "chapters": 120,
+  "chars": 598485
+ },
+ {
+  "id": "shuihu",
+  "title": "水浒传",
+  "author": "施耐庵",
+  "intro": "一百单八将聚义梁山泊，写尽官逼民反的江湖与人情，是一部英雄传奇。",
+  "section": "classics",
+  "chapters": 120,
+  "chars": 910459
+ },
+ {
+  "id": "honglou",
+  "title": "红楼梦",
+  "author": "曹雪芹",
+  "intro": "以贾宝玉与林黛玉、薛宝钗的爱情悲剧为主线，写尽四大家族的兴衰与人情世态。",
+  "section": "classics",
+  "chapters": 120,
+  "chars": 845200
+ },
+ {
+  "id": "zibei",
+  "title": "自卑与超越",
+  "author": "阿德勒",
+  "intro": "阿德勒个体心理学的代表作。从自卑情结到追求优越，讲清人一生行为的动力与生活的意义。",
+  "section": "adler",
+  "chapters": 13,
+  "chars": 123162
+ },
+ {
+  "id": "lijierenxing",
+  "title": "理解人性",
+  "author": "阿德勒",
+  "intro": "阿德勒写给普通人的个体心理学入门。灵魂、社会性、儿童、自卑感与认同、性格的科学。",
+  "section": "adler",
+  "chapters": 17,
+  "chars": 121747
+ },
+ {
+  "id": "ertong-jiaoyu",
+  "title": "儿童教育心理学",
+  "author": "阿德勒",
+  "intro": "阿德勒谈儿童教育：人格如何在童年形成，父母与教师怎么做才是真正的帮助。",
+  "section": "adler",
+  "chapters": 15,
+  "chars": 106277
+ },
+ {
+  "id": "ziwo-chaoyue",
+  "title": "自我超越",
+  "author": "阿德勒",
+  "intro": "五讲谈自我超越：生命的真谛、回忆、行动方式与孩子的超越教育。",
+  "section": "adler",
+  "chapters": 5,
+  "chars": 187295
+ },
+ {
+  "id": "ren-zuodedao",
+  "title": "人，做得到任何事",
+  "author": "阿德勒",
+  "intro": "十三讲讲透自卑情结、优越情结、人生风格、早期记忆与梦：人能做到任何事，关键在态度与行动。",
+  "section": "adler",
+  "chapters": 14,
+  "chars": 91568
+ }
+]
