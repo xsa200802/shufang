@@ -46,7 +46,10 @@ const params = new URLSearchParams(location.search);
 const bookId = params.get("book") || "xiyouji";
 let startCh = parseInt(params.get("ch") || "1", 10) || 1;
 
-let book = null;
+let index = null;   // {id,title,author,chapters:[{n,title,part}],parts} — small, loaded first
+let whole = null;   // fallback: full book JSON, only used if the index is missing
+const partCache = new Map();
+let renderToken = 0;
 let cur = startCh;
 
 const $ = id => document.getElementById(id);
@@ -71,24 +74,78 @@ function saveProgress() {
   }));
 }
 
-function renderChapter() {
-  const ch = book.chapters[cur - 1];
-  if (!ch) return;
-  document.title = ch.title + " · " + book.title;
-  $("bookTitle").textContent = book.title;
-  $("chapterTitle").textContent = ch.title;
-  const paras = ch.text.split(/\n\n+/).filter(p => p.trim());
-  $("chapterBody").innerHTML = paras.map(p =>
-    "<p>" + p.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>").join("");
+function totalChapters() {
+  return whole ? whole.chapters.length : (index ? index.chapters.length : 0);
+}
+function chapterMeta(n) {
+  return whole ? whole.chapters[n - 1] : index.chapters[n - 1];
+}
+function bookTitle() {
+  return whole ? whole.title : index.title;
+}
+
+async function fetchPart(p) {
+  if (partCache.has(p)) return partCache.get(p);
+  const res = await fetch("books/" + bookId + "-p" + p + ".json");
+  const doc = await res.json();
+  partCache.set(p, doc);
+  return doc;
+}
+
+async function getChapter(n) {
+  if (whole) return whole.chapters[n - 1];
+  const part = await fetchPart(index.chapters[n - 1].part);
+  return part.chapters.find(c => c.n === n);
+}
+
+function prefetchNext() {
+  if (whole || !index) return;
+  const next = index.chapters[cur]; // next chapter (cur is 1-based)
+  if (!next || partCache.has(next.part)) return;
+  fetchPart(next.part).catch(() => {});
+}
+
+const SKELETON =
+  '<div class="loading-lines" aria-hidden="true"><i></i><i></i><i></i><i></i></div>';
+
+async function renderChapter() {
+  const my = ++renderToken;
+  const meta = chapterMeta(cur);
+  if (!meta) return;
+  document.title = meta.title + " · " + bookTitle();
+  $("bookTitle").textContent = bookTitle();
+  $("chapterTitle").textContent = meta.title;
+  const bodyEl = $("chapterBody");
+  const cached = !!whole || partCache.has(index.chapters[cur - 1].part);
+  // start the download immediately, then fade out the old chapter
+  let resolved = false;
+  const p = getChapter(cur).then(ch => { resolved = true; return ch; });
+  bodyEl.classList.add("fading");
+  if (!cached) {
+    // only show the skeleton if the part takes longer than a blink
+    await Promise.race([p, new Promise(r => setTimeout(r, 150))]);
+    if (my !== renderToken) return;
+    if (!resolved) {
+      bodyEl.innerHTML = SKELETON;
+      bodyEl.classList.remove("fading");
+    }
+  }
+  const ch = await p;
+  if (my !== renderToken) return;
+  const paras = ch.text.split(/\n\n+/).filter(t => t.trim());
+  bodyEl.innerHTML = paras.map(t =>
+    "<p>" + t.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>").join("");
   $("prevBtn").disabled = cur <= 1;
-  $("nextBtn").disabled = cur >= book.chapters.length;
+  $("nextBtn").disabled = cur >= totalChapters();
   document.querySelectorAll(".toc-list li").forEach((li, i) => {
     li.classList.toggle("current", i + 1 === cur);
   });
   window.scrollTo(0, 0);
+  requestAnimationFrame(() => bodyEl.classList.remove("fading"));
   updateProgressBar();
   saveProgress();
   history.replaceState(null, "", "reader.html?book=" + bookId + "&ch=" + cur);
+  prefetchNext();
 }
 
 function updateProgressBar() {
@@ -96,16 +153,17 @@ function updateProgressBar() {
   const max = h.scrollHeight - h.clientHeight;
   const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
   $("progressBar").style.width = pct + "%";
-  if (book) {
-    $("posLabel").textContent = "第 " + cur + " / " + book.chapters.length + " 章 · " + Math.round(pct) + "%";
+  if (totalChapters()) {
+    $("posLabel").textContent = "第 " + cur + " / " + totalChapters() + " 章 · " + Math.round(pct) + "%";
   }
 }
 
 function buildToc() {
-  $("tocBookTitle").textContent = book.title + " · 目录";
+  $("tocBookTitle").textContent = bookTitle() + " · 目录";
   const ol = $("tocList");
   ol.innerHTML = "";
-  book.chapters.forEach((ch, i) => {
+  const list = whole ? whole.chapters : index.chapters;
+  list.forEach((ch, i) => {
     const li = document.createElement("li");
     li.textContent = ch.title;
     li.addEventListener("click", () => {
@@ -122,10 +180,17 @@ function closeToc() { $("tocDrawer").hidden = true; }
 
 async function init() {
   loadSettings();
-  const res = await fetch("books/" + bookId + ".json");
-  book = await res.json();
+  try {
+    const res = await fetch("books/" + bookId + "-idx.json");
+    if (!res.ok) throw new Error("no index");
+    index = await res.json();
+  } catch (e) {
+    const res = await fetch("books/" + bookId + ".json");
+    whole = await res.json();
+  }
+  const total = totalChapters();
   if (cur < 1) cur = 1;
-  if (cur > book.chapters.length) cur = book.chapters.length;
+  if (cur > total) cur = total;
   // restore scroll position if returning to the same chapter
   let savedScroll = 0;
   try {
@@ -133,13 +198,13 @@ async function init() {
     if (p && p.ch === cur && p.scroll) savedScroll = p.scroll;
   } catch (e) {}
   buildToc();
-  renderChapter();
+  await renderChapter();
   if (savedScroll) window.scrollTo(0, savedScroll);
   updateProgressBar();
 }
 
 $("prevBtn").addEventListener("click", () => { if (cur > 1) { cur--; renderChapter(); } });
-$("nextBtn").addEventListener("click", () => { if (cur < book.chapters.length) { cur++; renderChapter(); } });
+$("nextBtn").addEventListener("click", () => { if (cur < totalChapters()) { cur++; renderChapter(); } });
 $("tocBtn").addEventListener("click", openToc);
 $("tocClose").addEventListener("click", closeToc);
 $("tocDrawer").addEventListener("click", e => { if (e.target === $("tocDrawer")) closeToc(); });
@@ -160,7 +225,7 @@ $("nightBtn").addEventListener("click", () => {
 window.addEventListener("scroll", () => { updateProgressBar(); saveProgress(); }, { passive: true });
 window.addEventListener("keydown", e => {
   if (e.key === "ArrowLeft" && cur > 1) { cur--; renderChapter(); }
-  if (e.key === "ArrowRight" && book && cur < book.chapters.length) { cur++; renderChapter(); }
+  if (e.key === "ArrowRight" && cur < totalChapters()) { cur++; renderChapter(); }
   if (e.key === "Escape") closeToc();
 });
 

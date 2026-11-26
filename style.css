@@ -373,6 +373,23 @@ body.night .book-btn { color: #1c1a17; }
   background: var(--accent);
   margin: 18px auto 0;
 }
+.chapter-body { transition: opacity .18s ease, transform .18s ease; }
+.chapter-body.fading { opacity: 0; transform: translateY(6px); }
+.loading-lines { padding-top: 8px; }
+.loading-lines i {
+  display: block;
+  height: 1em;
+  margin: 0 0 18px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--bg-2), var(--card), var(--bg-2));
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+.loading-lines i:nth-child(1) { width: 96%; }
+.loading-lines i:nth-child(2) { width: 88%; }
+.loading-lines i:nth-child(3) { width: 93%; }
+.loading-lines i:nth-child(4) { width: 70%; }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 .chapter-body p {
   font-size: var(--reader-size);
   line-height: 1.9;
